@@ -1,10 +1,13 @@
 package com.DeliveryMatch.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import lombok.Data;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class User{
+@Data
+public abstract class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,6 +18,5 @@ public abstract class User{
     private String email;
     private String motDePass;
     
-    private DateTime dateInscription;
-
+    private LocalDateTime dateInscription;
 }
