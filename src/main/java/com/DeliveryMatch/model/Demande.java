@@ -1,8 +1,7 @@
 package com.DeliveryMatch.model;
 
 import jakarta.persistence.*;
-
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 public class Demande {
@@ -13,9 +12,8 @@ public class Demande {
 
     private String dimensionsColis;
     private float poids;
-    private String typeColis;
     private String status;
-    private LocalDateTime dateDemande;
+    private Date dateDemande;
 
     @ManyToOne
     @JoinColumn(name = "expediteur_id")

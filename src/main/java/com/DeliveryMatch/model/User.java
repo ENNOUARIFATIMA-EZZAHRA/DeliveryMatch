@@ -1,11 +1,13 @@
 package com.DeliveryMatch.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import java.util.Date;
+
 import lombok.Data;
 
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "user_type")
 @Data
 public abstract class User {
 
@@ -18,5 +20,8 @@ public abstract class User {
     private String email;
     private String motDePass;
     
-    private LocalDateTime dateInscription;
+    private Date dateInscription;
+
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 }

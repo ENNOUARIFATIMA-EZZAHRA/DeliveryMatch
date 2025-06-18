@@ -8,6 +8,4 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class Expediteur extends User {
-    private String adresse;
-    private String telephone;
 } 

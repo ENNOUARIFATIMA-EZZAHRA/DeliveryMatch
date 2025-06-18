@@ -2,12 +2,13 @@ package com.DeliveryMatch.service;
 
 import com.DeliveryMatch.dto.UserDTO;
 import com.DeliveryMatch.model.Expediteur;
+import com.DeliveryMatch.model.User;
 import com.DeliveryMatch.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Service
 public class UserService {
@@ -23,38 +24,50 @@ public class UserService {
             throw new RuntimeException("Email déjà utilisé");
         }
 
-        Expediteur expediteur = new Expediteur();
-        expediteur.setNom(userDTO.getNom());
-        expediteur.setPrenom(userDTO.getPrenom());
-        expediteur.setEmail(userDTO.getEmail());
-        expediteur.setMotDePass(passwordEncoder.encode(userDTO.getMotDePass()));
-        expediteur.setDateInscription(LocalDateTime.now());
+        Expediteur user = new Expediteur();
+        user.setNom(userDTO.getNom());
+        user.setPrenom(userDTO.getPrenom());
+        user.setEmail(userDTO.getEmail());
+        user.setMotDePass(passwordEncoder.encode(userDTO.getMotDePass()));
+        user.setDateInscription(new Date());
+        
+        User savedUser = userRepository.save(user);
+        return convertToDTO((Expediteur) savedUser);
+    }
 
-        Expediteur savedUser = (Expediteur) userRepository.save(expediteur);
-        return convertToDTO(savedUser);
+    public UserDTO login(String email, String password) {
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        
+        if (!passwordEncoder.matches(password, user.getMotDePass())) {
+            throw new RuntimeException("Mot de passe incorrect");
+        }
+        
+        return convertToDTO((Expediteur) user);
     }
 
     public UserDTO updateUser(Integer id, UserDTO userDTO) {
-        Expediteur expediteur = (Expediteur) userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
-
-        expediteur.setNom(userDTO.getNom());
-        expediteur.setPrenom(userDTO.getPrenom());
-        expediteur.setEmail(userDTO.getEmail());
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        
+        user.setNom(userDTO.getNom());
+        user.setPrenom(userDTO.getPrenom());
+        user.setEmail(userDTO.getEmail());
         if (userDTO.getMotDePass() != null && !userDTO.getMotDePass().isEmpty()) {
-            expediteur.setMotDePass(passwordEncoder.encode(userDTO.getMotDePass()));
+            user.setMotDePass(passwordEncoder.encode(userDTO.getMotDePass()));
         }
-
-        Expediteur updatedUser = (Expediteur) userRepository.save(expediteur);
-        return convertToDTO(updatedUser);
+        
+        User updatedUser = userRepository.save(user);
+        return convertToDTO((Expediteur) updatedUser);
     }
 
-    private UserDTO convertToDTO(Expediteur expediteur) {
+    private UserDTO convertToDTO(Expediteur user) {
         UserDTO dto = new UserDTO();
-        dto.setId(expediteur.getId());
-        dto.setNom(expediteur.getNom());
-        dto.setPrenom(expediteur.getPrenom());
-        dto.setEmail(expediteur.getEmail());
+        dto.setId(user.getId());
+        dto.setNom(user.getNom());
+        dto.setPrenom(user.getPrenom());
+        dto.setEmail(user.getEmail());
+        dto.setDateInscription(user.getDateInscription());
         return dto;
     }
 }

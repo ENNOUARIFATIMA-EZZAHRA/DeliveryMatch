@@ -14,8 +14,7 @@ import java.util.List;
 public class Conducteur extends User {
 
     private float noteMoyenne;
-    private String adresse;
-    private String telephone;
+
 
     @OneToMany(mappedBy = "conducteur", cascade = CascadeType.ALL)
     private List<Annonce> annonces;
