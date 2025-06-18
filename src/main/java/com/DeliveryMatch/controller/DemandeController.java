@@ -1,14 +1,71 @@
 package com.DeliveryMatch.controller;
 
+import com.DeliveryMatch.model.Demande;
+import com.DeliveryMatch.model.Expediteur;
+import com.DeliveryMatch.model.Annonce;
+import com.DeliveryMatch.repository.DemandeTransportRepository;
+import com.DeliveryMatch.repository.ExpediteurRepository;
+import com.DeliveryMatch.repository.AnnonceRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import java.util.Date;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/demandes")
 public class DemandeController {
+
+    @Autowired
+    private DemandeTransportRepository demandeRepository;
+
+    @Autowired
+    private ExpediteurRepository expediteurRepository;
+
+    @Autowired
+    private AnnonceRepository annonceRepository;
+
+    // Endpoint pour envoyer une demande de transport
+    @PostMapping("/envoyer")
+    @PreAuthorize("hasRole('EXPEDITEUR')")
+    public ResponseEntity<?> envoyerDemande(
+            @RequestParam Integer annonceId,
+            @RequestParam String dimensionsColis,
+            @RequestParam float poids,
+            Authentication authentication
+    ) {
+        try {
+            // Récupérer l'expéditeur connecté
+            String email = authentication.getName();
+            Expediteur expediteur = expediteurRepository.findByEmail(email).orElse(null);
+            if (expediteur == null) {
+                return ResponseEntity.badRequest().body("Expéditeur non trouvé");
+            }
+
+            // Vérifier que l'annonce existe
+            Annonce annonce = annonceRepository.findById(annonceId).orElse(null);
+            if (annonce == null) {
+                return ResponseEntity.badRequest().body("Annonce non trouvée");
+            }
+
+            // Créer la demande
+            Demande demande = new Demande();
+            demande.setExpediteur(expediteur);
+            demande.setAnnonce(annonce);
+            demande.setDimensionsColis(dimensionsColis);
+            demande.setPoids(poids);
+            demande.setStatus("EN_ATTENTE");
+            demande.setDateDemande(new Date());
+
+            demandeRepository.save(demande);
+
+            return ResponseEntity.ok("Demande envoyée avec succès");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erreur: " + e.getMessage());
+        }
+    }
 
     @PutMapping("/{id}/accepter")
     @PreAuthorize("hasAnyRole('CONDUCTEUR', 'ADMINISTRATEUR')")
@@ -38,6 +95,5 @@ public class DemandeController {
         String email = authentication.getName(); // جاي من JWT
         return ResponseEntity.ok("Demandes pour : " + email);
     }
-
 }
 
