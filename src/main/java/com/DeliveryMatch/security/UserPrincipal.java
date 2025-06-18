@@ -25,10 +25,10 @@ public class UserPrincipal implements UserDetails {
 
     public static UserPrincipal create(User user) {
         return new UserPrincipal(
-                user.getId().longValue(),
-                user.getEmail(),
-                user.getMotDePass(),
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
+            user.getId().longValue(),
+            user.getEmail(),
+            user.getMotDePass(),
+            Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()))
         );
     }
 

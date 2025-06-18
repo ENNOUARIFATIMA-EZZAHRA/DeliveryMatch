@@ -81,7 +81,7 @@ public class UserController {
         
         userRepository.save(user);
 
-        String token = jwtTokenProvider.generateToken(user.getEmail());
+        String token = jwtTokenProvider.generateToken(user.getEmail(), user.getRole().name());
         
         Map<String, Object> response = new HashMap<>();
         response.put("token", token);
@@ -124,7 +124,7 @@ public class UserController {
         }
 
         loginAttemptService.resetAttempts(loginRequest.getEmail());
-        String token = jwtTokenProvider.generateToken(user.getEmail());
+        String token = jwtTokenProvider.generateToken(user.getEmail(), user.getRole().name());
         
         Map<String, Object> response = new HashMap<>();
         response.put("token", token);

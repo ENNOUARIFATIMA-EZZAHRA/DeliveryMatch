@@ -10,7 +10,7 @@ public class PasswordValidator {
             return false;
         }
 
-        // التحقق من أن كل الأحرف أرقام
+
         for (char c : password.toCharArray()) {
             if (!Character.isDigit(c)) {
                 return false;
