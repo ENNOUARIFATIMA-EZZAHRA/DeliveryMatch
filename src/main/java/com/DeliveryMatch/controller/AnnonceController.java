@@ -34,4 +34,10 @@ public class AnnonceController {
                 typeColis == null ? "" : typeColis
         );
     }
+
+    // Endpoint pour créer une nouvelle annonce
+    @PostMapping
+    public Annonce createAnnonce(@RequestBody Annonce annonce) {
+        return annonceRepository.save(annonce);
+    }
 }

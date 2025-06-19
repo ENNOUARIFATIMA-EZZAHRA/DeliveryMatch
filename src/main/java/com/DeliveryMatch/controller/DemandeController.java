@@ -27,15 +27,25 @@ public class DemandeController {
     @Autowired
     private AnnonceRepository annonceRepository;
 
+    // DTO simple pour la demande
+    public static class DemandeRequest {
+        private Integer annonceId;
+        private String dimensionsColis;
+        private float poids;
+
+        // Getters et Setters
+        public Integer getAnnonceId() { return annonceId; }
+        public void setAnnonceId(Integer annonceId) { this.annonceId = annonceId; }
+        public String getDimensionsColis() { return dimensionsColis; }
+        public void setDimensionsColis(String dimensionsColis) { this.dimensionsColis = dimensionsColis; }
+        public float getPoids() { return poids; }
+        public void setPoids(float poids) { this.poids = poids; }
+    }
+
     // Endpoint pour envoyer une demande de transport
     @PostMapping("/envoyer")
     @PreAuthorize("hasRole('EXPEDITEUR')")
-    public ResponseEntity<?> envoyerDemande(
-            @RequestParam Integer annonceId,
-            @RequestParam String dimensionsColis,
-            @RequestParam float poids,
-            Authentication authentication
-    ) {
+    public ResponseEntity<?> envoyerDemande(@RequestBody DemandeRequest request, Authentication authentication) {
         try {
             // Récupérer l'expéditeur connecté
             String email = authentication.getName();
@@ -45,7 +55,7 @@ public class DemandeController {
             }
 
             // Vérifier que l'annonce existe
-            Annonce annonce = annonceRepository.findById(annonceId).orElse(null);
+            Annonce annonce = annonceRepository.findById(request.getAnnonceId()).orElse(null);
             if (annonce == null) {
                 return ResponseEntity.badRequest().body("Annonce non trouvée");
             }
@@ -54,10 +64,10 @@ public class DemandeController {
             Demande demande = new Demande();
             demande.setExpediteur(expediteur);
             demande.setAnnonce(annonce);
-            demande.setDimensionsColis(dimensionsColis);
-            demande.setPoids(poids);
+            demande.setDimensionsColis(request.getDimensionsColis());
+            demande.setPoids(request.getPoids());
             demande.setStatus("EN_ATTENTE");
-            demande.setDateDemande(new Date());
+            demande.setDateDemande(new java.util.Date());
 
             demandeRepository.save(demande);
 
@@ -92,7 +102,7 @@ public class DemandeController {
     @GetMapping("/mes-demandes")
     @PreAuthorize("hasRole('CONDUCTEUR')")
     public ResponseEntity<?> getMesDemandes(Authentication authentication) {
-        String email = authentication.getName(); // جاي من JWT
+        String email = authentication.getName(); 
         return ResponseEntity.ok("Demandes pour : " + email);
     }
 }
