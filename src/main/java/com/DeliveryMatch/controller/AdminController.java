@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
+import java.util.List;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -73,6 +77,42 @@ public class AdminController {
         userService.enleverVerification(id);
         Map<String, String> response = new HashMap<>();
         response.put("message", "Badge Vérifié تمت إزالته بنجاح");
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/annonces")
+    @PreAuthorize("hasRole('ADMINISTRATEUR')")
+    public List<Annonce> getAllAnnonces() {
+        return annonceRepository.findAll();
+    }
+
+    @PostMapping("/annonces")
+    @PreAuthorize("hasRole('ADMINISTRATEUR')")
+    public Annonce createAnnonce(@RequestBody Annonce annonce) {
+        return annonceRepository.save(annonce);
+    }
+
+    @PutMapping("/annonces/{id}")
+    @PreAuthorize("hasRole('ADMINISTRATEUR')")
+    public Annonce updateAnnonce(@PathVariable Integer id, @RequestBody Annonce annonce) {
+        Annonce existing = annonceRepository.findById(id).orElseThrow(() -> new RuntimeException("Annonce non trouvée"));
+        existing.setLieuDepart(annonce.getLieuDepart());
+        existing.setDestination(annonce.getDestination());
+        existing.setEtapes(annonce.getEtapes());
+        existing.setDimensionsMax(annonce.getDimensionsMax());
+        existing.setTypeMarchandise(annonce.getTypeMarchandise());
+        existing.setCapacite(annonce.getCapacite());
+        existing.setDateDepart(annonce.getDateDepart());
+        existing.setStatus(annonce.getStatus());
+        return annonceRepository.save(existing);
+    }
+
+    @DeleteMapping("/annonces/{id}")
+    @PreAuthorize("hasRole('ADMINISTRATEUR')")
+    public ResponseEntity<Map<String, String>> deleteAnnonce(@PathVariable Integer id) {
+        annonceRepository.deleteById(id);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Annonce supprimée avec succès");
         return ResponseEntity.ok(response);
     }
 }
