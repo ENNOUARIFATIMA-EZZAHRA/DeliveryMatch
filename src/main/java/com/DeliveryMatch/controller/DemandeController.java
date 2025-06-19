@@ -105,5 +105,14 @@ public class DemandeController {
         String email = authentication.getName(); 
         return ResponseEntity.ok("Demandes pour : " + email);
     }
+
+    @GetMapping("/historique")
+    @PreAuthorize("hasRole('EXPEDITEUR')")
+    public List<Demande> historiqueDemandes(Authentication authentication) {
+        String email = authentication.getName();
+        Expediteur expediteur = expediteurRepository.findByEmail(email).orElse(null);
+        if (expediteur == null) return List.of();
+        return demandeRepository.findByExpediteurId(expediteur.getId());
+    }
 }
 

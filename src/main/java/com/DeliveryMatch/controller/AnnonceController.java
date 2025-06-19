@@ -20,18 +20,16 @@ public class AnnonceController {
     @GetMapping("/search")
     public List<Annonce> searchAnnonces(
             @RequestParam(required = false) String destination,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dateDepart,
-            @RequestParam(required = false) String typeColis
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dateDepart
     ) {
         // Si tous les critères sont vides, retourner tout
-        if ((destination == null || destination.isEmpty()) && dateDepart == null && (typeColis == null || typeColis.isEmpty())) {
+        if ((destination == null || destination.isEmpty()) && dateDepart == null) {
             return annonceRepository.findAll();
         }
         // Utiliser la méthode de recherche avec valeurs par défaut si null
-        return annonceRepository.findByDestinationContainingIgnoreCaseAndDateDepartAndTypeMarchandiseContainingIgnoreCase(
+        return annonceRepository.findByDestinationContainingIgnoreCaseAndDateDepart(
                 destination == null ? "" : destination,
-                dateDepart,
-                typeColis == null ? "" : typeColis
+                dateDepart
         );
     }
 
