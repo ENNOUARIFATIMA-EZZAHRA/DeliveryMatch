@@ -61,6 +61,30 @@ public class UserService {
         return convertToDTO((Expediteur) updatedUser);
     }
 
+    public void validerUser(Integer id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        user.setStatus("ENABLED");
+        userRepository.save(user);
+    }
+
+    public void suspendreUser(Integer id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        user.setStatus("SUSPENDED");
+        userRepository.save(user);
+    }
+
+    public void verifierUser(Integer id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        user.setVerified(true);
+        userRepository.save(user);
+    }
+
+    public void enleverVerification(Integer id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        user.setVerified(false);
+        userRepository.save(user);
+    }
+
     private UserDTO convertToDTO(Expediteur user) {
         UserDTO dto = new UserDTO();
         dto.setId(user.getId());

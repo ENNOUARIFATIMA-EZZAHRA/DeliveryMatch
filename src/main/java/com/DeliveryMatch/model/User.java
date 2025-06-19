@@ -24,4 +24,7 @@ public abstract class User {
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    private String status = "ENABLED"; // أو SUSPENDED
+    private boolean verified = false;
 }
