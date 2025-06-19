@@ -65,7 +65,8 @@ Le projet est structuré selon une architecture MVC claire avec séparation des 
 
 **Diagramme de Class**
 
-<img width="515" alt="image" src="https://github.com/user-attachments/assets/b0dd172a-f04e-45aa-9a16-fa57c270bc0b" />
+<img width="550" alt="image" src="https://github.com/user-attachments/assets/cd4d554c-7a77-45c9-89df-94d299f7ce68" />
+
 
 
 **Diagramme de sequence de login**
@@ -78,6 +79,11 @@ Le projet est structuré selon une architecture MVC claire avec séparation des 
 
 ![image](https://github.com/user-attachments/assets/16ac94d8-ef43-42b2-95a3-26501001ea04)
 
+
+**Diagramme de Use case**
+
+
+<img width="368" alt="image" src="https://github.com/user-attachments/assets/1f247bf1-cf36-4047-ac0f-ebd9a31cf2f5" />
 
 
 
