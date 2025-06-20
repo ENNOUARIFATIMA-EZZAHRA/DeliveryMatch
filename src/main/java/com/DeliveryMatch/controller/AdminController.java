@@ -115,4 +115,58 @@ public class AdminController {
         response.put("message", "Annonce supprimée avec succès");
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/statistiques")
+    @PreAuthorize("hasRole('ADMINISTRATEUR')")
+    public Map<String, Object> getStatistiques() {
+        Map<String, Object> stats = new HashMap<>();
+        
+        // إحصائيات المستخدمين
+        long totalUsers = userRepository.count();
+        long conducteurs = userRepository.findAll().stream()
+            .filter(user -> "CONDUCTEUR".equals(user.getRole().toString())).count();
+        long expediteurs = userRepository.findAll().stream()
+            .filter(user -> "EXPEDITEUR".equals(user.getRole().toString())).count();
+        long admins = userRepository.findAll().stream()
+            .filter(user -> "ADMINISTRATEUR".equals(user.getRole().toString())).count();
+        
+        // إحصائيات الإعلانات
+        long totalAnnonces = annonceRepository.count();
+        long annoncesActives = annonceRepository.findAll().stream()
+            .filter(annonce -> "ACTIVE".equals(annonce.getStatus())).count();
+        
+        // إحصائيات الطلبات
+        long totalDemandes = demandeRepository.count();
+        long demandesAcceptees = demandeRepository.findAll().stream()
+            .filter(demande -> "ACCEPTEE".equals(demande.getStatus())).count();
+        
+        // حساب معدل القبول
+        double tauxAcceptation = totalDemandes > 0 ? (double) demandesAcceptees / totalDemandes * 100 : 0;
+        
+        // إعداد البيانات لـ Chart.js
+        Map<String, Object> userStats = new HashMap<>();
+        userStats.put("labels", List.of("Conducteurs", "Expéditeurs", "Administrateurs"));
+        userStats.put("data", List.of(conducteurs, expediteurs, admins));
+        userStats.put("backgroundColor", List.of("#FF6384", "#36A2EB", "#FFCE56"));
+        
+        Map<String, Object> annonceStats = new HashMap<>();
+        annonceStats.put("labels", List.of("Actives", "Inactives"));
+        annonceStats.put("data", List.of(annoncesActives, totalAnnonces - annoncesActives));
+        annonceStats.put("backgroundColor", List.of("#4BC0C0", "#FF9F40"));
+        
+        Map<String, Object> demandeStats = new HashMap<>();
+        demandeStats.put("labels", List.of("Acceptées", "En attente", "Refusées"));
+        demandeStats.put("data", List.of(demandesAcceptees, totalDemandes - demandesAcceptees, 0));
+        demandeStats.put("backgroundColor", List.of("#4BC0C0", "#FF9F40", "#FF6384"));
+        
+        stats.put("totalUsers", totalUsers);
+        stats.put("totalAnnonces", totalAnnonces);
+        stats.put("totalDemandes", totalDemandes);
+        stats.put("tauxAcceptation", Math.round(tauxAcceptation * 100.0) / 100.0);
+        stats.put("userChart", userStats);
+        stats.put("annonceChart", annonceStats);
+        stats.put("demandeChart", demandeStats);
+        
+        return stats;
+    }
 }

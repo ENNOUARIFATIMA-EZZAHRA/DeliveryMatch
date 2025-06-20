@@ -86,5 +86,22 @@ Le projet est structuré selon une architecture MVC claire avec séparation des 
 <img width="368" alt="image" src="https://github.com/user-attachments/assets/1f247bf1-cf36-4047-ac0f-ebd9a31cf2f5" />
 
 
+**Diagramme de sequence de condicteur**
+
+
+<img width="335" alt="image" src="https://github.com/user-attachments/assets/8d3b9f0e-2d63-482a-a94f-624f10894267" />
+
+
+
+**Diagramme de sequence de Administrateur**
+
+
+<img width="518" alt="image" src="https://github.com/user-attachments/assets/804fccf5-c359-461c-876b-bddcd2521344" />
+
+
+**Diagramme de sequence de expiditeur**
+
+
+<img width="553" alt="image" src="https://github.com/user-attachments/assets/94d9273e-a796-4be9-9a61-4063cb6e168b" />
 
 

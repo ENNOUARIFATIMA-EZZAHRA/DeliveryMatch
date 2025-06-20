@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Administrateur - DeliveryMatch</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2196F3;
+        }
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+        }
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .chart-title {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #333;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Dashboard Administrateur</h1>
+            <p>Statistiques de la plateforme DeliveryMatch</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalUsers">-</div>
+                <div class="stat-label">Utilisateurs Totaux</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalAnnonces">-</div>
+                <div class="stat-label">Annonces Totales</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalDemandes">-</div>
+                <div class="stat-label">Demandes Totales</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="tauxAcceptation">-</div>
+                <div class="stat-label">Taux d'Acceptation (%)</div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-container">
+                <div class="chart-title">Répartition des Utilisateurs</div>
+                <canvas id="userChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <div class="chart-title">Statut des Annonces</div>
+                <canvas id="annonceChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <div class="chart-title">Statut des Demandes</div>
+                <canvas id="demandeChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Récupération des données depuis l'API
+        async function loadStats() {
+            try {
+                const response = await fetch('/api/admin/statistiques', {
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Erreur lors du chargement des statistiques');
+                }
+                
+                const data = await response.json();
+                
+                // Mise à jour des cartes de statistiques
+                document.getElementById('totalUsers').textContent = data.totalUsers;
+                document.getElementById('totalAnnonces').textContent = data.totalAnnonces;
+                document.getElementById('totalDemandes').textContent = data.totalDemandes;
+                document.getElementById('tauxAcceptation').textContent = data.tauxAcceptation + '%';
+                
+                // Création des graphiques
+                createChart('userChart', 'doughnut', data.userChart, 'Utilisateurs par Type');
+                createChart('annonceChart', 'pie', data.annonceChart, 'Statut des Annonces');
+                createChart('demandeChart', 'bar', data.demandeChart, 'Statut des Demandes');
+                
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Erreur lors du chargement des statistiques. Vérifiez votre connexion.');
+            }
+        }
+        
+        function createChart(canvasId, type, chartData, title) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            
+            new Chart(ctx, {
+                type: type,
+                data: {
+                    labels: chartData.labels,
+                    datasets: [{
+                        data: chartData.data,
+                        backgroundColor: chartData.backgroundColor,
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        title: {
+                            display: true,
+                            text: title
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Chargement des données au chargement de la page
+        document.addEventListener('DOMContentLoaded', loadStats);
+        
+        // Actualisation automatique toutes les 30 secondes
+        setInterval(loadStats, 30000);
+    </script>
+</body>
+</html> 
