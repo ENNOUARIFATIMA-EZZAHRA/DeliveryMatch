@@ -11,5 +11,7 @@ import java.util.List;
 public interface AnnonceRepository extends JpaRepository<Annonce, Integer> {
     List<Annonce> findByDestinationContainingIgnoreCaseAndDateDepart(
         String destination, Date dateDepart);
+    
+    List<Annonce> findByConducteurId(Integer conducteurId);
 }
 
