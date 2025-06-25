@@ -27,12 +27,9 @@ public class UserDTO {
     @NotNull(message = "Password is required")
     @NotBlank(message = "Password cannot be empty")
     private String motDePass;
-    
-<<<<<<< HEAD
-    private LocalDateTime dateInscription;
-=======
+
     private Date dateInscription;
->>>>>>> 96f55b51b676be3fe770b04e465878f6136a671c
+
     
     @NotNull(message = "Role is required")
     private UserRole role;
