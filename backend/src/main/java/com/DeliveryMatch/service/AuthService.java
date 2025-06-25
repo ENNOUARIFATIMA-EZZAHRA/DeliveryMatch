@@ -49,7 +49,11 @@ public class AuthService {
         user.setPrenom(userDTO.getPrenom());
         user.setEmail(userDTO.getEmail());
         user.setMotDePass(passwordEncoder.encode(userDTO.getMotDePass()));
+<<<<<<< HEAD
         user.setDateInscription(LocalDateTime.now());
+=======
+        user.setDateInscription(new Date());
+>>>>>>> 96f55b51b676be3fe770b04e465878f6136a671c
         user.setRole(userDTO.getRole());
         user.setStatus("ENABLED");
         user.setVerified(false);

@@ -50,7 +50,33 @@ public class AdminController {
         return ResponseEntity.ok(Map.of("message", "Utilisateur validé"));
     }
 
+<<<<<<< HEAD
 
+=======
+    @PostMapping("/suspendre/{id}")
+    @PreAuthorize("hasRole('ADMINISTRATEUR')")
+    public ResponseEntity<?> suspendreUser(@PathVariable Integer id) {
+        if (!checkUserExists(id)) return ResponseEntity.badRequest().body(Map.of("error", "Utilisateur introuvable"));
+        userService.suspendreUser(id);
+        return ResponseEntity.ok(Map.of("message", "Utilisateur suspendu"));
+    }
+
+    @PostMapping("/verifier/{id}")
+    @PreAuthorize("hasRole('ADMINISTRATEUR')")
+    public ResponseEntity<?> verifierUser(@PathVariable Integer id) {
+        if (!checkUserExists(id)) return ResponseEntity.badRequest().body(Map.of("error", "Utilisateur introuvable"));
+        userService.verifierUser(id);
+        return ResponseEntity.ok(Map.of("message", "Badge Vérifié ajouté"));
+    }
+
+    @PostMapping("/enlever-verification/{id}")
+    @PreAuthorize("hasRole('ADMINISTRATEUR')")
+    public ResponseEntity<?> enleverVerification(@PathVariable Integer id) {
+        if (!checkUserExists(id)) return ResponseEntity.badRequest().body(Map.of("error", "Utilisateur introuvable"));
+        userService.enleverVerification(id);
+        return ResponseEntity.ok(Map.of("message", "Badge Vérifié supprimé"));
+    }
+>>>>>>> 96f55b51b676be3fe770b04e465878f6136a671c
 
     // annonces
     @GetMapping("/annonces")
@@ -58,7 +84,11 @@ public class AdminController {
     public List<Annonce> getAllAnnonces() {
         return annonceRepository.findAll();
     }
+<<<<<<< HEAD
 //updateAnnonce
+=======
+
+>>>>>>> 96f55b51b676be3fe770b04e465878f6136a671c
     @PutMapping("/annonces/{id}")
     @PreAuthorize("hasRole('ADMINISTRATEUR')")
     public ResponseEntity<?> updateAnnonce(@PathVariable Integer id, @RequestBody Annonce annonce) {

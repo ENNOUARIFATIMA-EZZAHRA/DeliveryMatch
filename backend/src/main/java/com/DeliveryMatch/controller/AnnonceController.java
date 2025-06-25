@@ -1,11 +1,16 @@
 package com.DeliveryMatch.controller;
 
 import com.DeliveryMatch.model.Annonce;
+<<<<<<< HEAD
 import com.DeliveryMatch.dto.AnnonceDTO;
+=======
+import com.DeliveryMatch.model.Conducteur;
+>>>>>>> 96f55b51b676be3fe770b04e465878f6136a671c
 import com.DeliveryMatch.model.User;
 import com.DeliveryMatch.repository.AnnonceRepository;
 import com.DeliveryMatch.repository.UserRepository;
 import com.DeliveryMatch.security.JwtTokenProvider;
+<<<<<<< HEAD
 import com.DeliveryMatch.service.AnnonceService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +18,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+=======
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.sql.Date;
+>>>>>>> 96f55b51b676be3fe770b04e465878f6136a671c
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +46,17 @@ public class AnnonceController {
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
+<<<<<<< HEAD
+=======
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @GetMapping
+    public List<Annonce> getAllAnnonces() {
+        return annonceRepository.findAll();
+    }
+>>>>>>> 96f55b51b676be3fe770b04e465878f6136a671c
 
     @Autowired
     private UserRepository userRepository;
@@ -184,6 +211,7 @@ public class AnnonceController {
         }
     }
 
+<<<<<<< HEAD
     // Méthode utilitaire pour convertir Annonce en AnnonceDTO
     private AnnonceDTO toDTO(Annonce annonce) {
         AnnonceDTO dto = new AnnonceDTO();
@@ -201,5 +229,39 @@ public class AnnonceController {
             dto.setNoteMoyenne(annonce.getConducteur().getNoteMoyenne());
         }
         return dto;
+=======
+    @PostMapping
+    @PreAuthorize("hasRole('CONDUCTEUR')")
+    public ResponseEntity<?> createAnnonce(@RequestBody Annonce annonce, HttpServletRequest request) {
+        String token = jwtTokenProvider.resolveToken(request);
+        if (token == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token not provided");
+        }
+        String email = jwtTokenProvider.getEmailFromToken(token);
+        User user = userRepository.findByEmail(email).orElse(null);
+
+        if (user == null || !(user instanceof Conducteur)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User is not a driver or not found");
+        }
+        
+        annonce.setConducteur((Conducteur) user);
+        
+        Annonce savedAnnonce = annonceRepository.save(annonce);
+        return ResponseEntity.ok(savedAnnonce);
+    }
+
+    @GetMapping("/conducteur")
+    public List<Annonce> getAnnoncesByConducteur(HttpServletRequest request) {
+        String token = jwtTokenProvider.resolveToken(request);
+        if (token == null) {
+            return Collections.emptyList();
+        }
+        String email = jwtTokenProvider.getEmailFromToken(token);
+        User user = userRepository.findByEmail(email).orElse(null);
+        if (user != null) {
+            return annonceRepository.findByConducteurId(user.getId());
+        }
+        return Collections.emptyList();
+>>>>>>> 96f55b51b676be3fe770b04e465878f6136a671c
     }
 }

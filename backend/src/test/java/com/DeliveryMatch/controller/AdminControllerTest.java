@@ -4,8 +4,11 @@ import com.DeliveryMatch.model.User;
 import com.DeliveryMatch.model.UserRole;
 import com.DeliveryMatch.repository.UserRepository;
 import com.DeliveryMatch.service.UserService;
+<<<<<<< HEAD
 import com.DeliveryMatch.repository.AnnonceRepository;
 import com.DeliveryMatch.repository.DemandeTransportRepository;
+=======
+>>>>>>> 96f55b51b676be3fe770b04e465878f6136a671c
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +18,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+<<<<<<< HEAD
 import org.springframework.context.annotation.Import;
+=======
+>>>>>>> 96f55b51b676be3fe770b04e465878f6136a671c
 
 import java.util.Arrays;
 import java.util.Date;
@@ -28,7 +34,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AdminController.class)
+<<<<<<< HEAD
 @Import(com.DeliveryMatch.config.SecurityConfig.class)
+=======
+>>>>>>> 96f55b51b676be3fe770b04e465878f6136a671c
 class AdminControllerTest {
 
     @Autowired
@@ -40,6 +49,7 @@ class AdminControllerTest {
     @MockBean
     private UserService userService;
 
+<<<<<<< HEAD
     @MockBean
     private AnnonceRepository annonceRepository;
 
@@ -52,6 +62,8 @@ class AdminControllerTest {
     @MockBean
     private com.DeliveryMatch.security.JwtAuthenticationFilter jwtAuthenticationFilter;
 
+=======
+>>>>>>> 96f55b51b676be3fe770b04e465878f6136a671c
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -69,7 +81,11 @@ class AdminControllerTest {
         testUser.setNom("Test");
         testUser.setPrenom("User");
         testUser.setEmail("test@example.com");
+<<<<<<< HEAD
         testUser.setDateInscription(java.time.LocalDateTime.now());
+=======
+        testUser.setDateInscription(new Date());
+>>>>>>> 96f55b51b676be3fe770b04e465878f6136a671c
         testUser.setRole(UserRole.ADMINISTRATEUR);
     }
 

@@ -32,10 +32,17 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> 
+<<<<<<< HEAD
                 auth.requestMatchers("/api/auth/**", "/api/users/register", "/api/users/login").permitAll()
                     .requestMatchers("/api/annonces/**").permitAll()
                     .requestMatchers("/api/demandes/**", "/api/users/**", "/api/admin/**").authenticated()
                     .anyRequest().permitAll()
+=======
+                auth.requestMatchers("/api/users/register", "/api/users/login", 
+                                   "/api/auth/register", "/api/auth/login",
+                                   "/api/annonces", "/api/annonces/**").permitAll()
+                    .anyRequest().authenticated()
+>>>>>>> 96f55b51b676be3fe770b04e465878f6136a671c
             )
             .addFilterBefore(jwtAuthenticationFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
     
@@ -45,11 +52,18 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+<<<<<<< HEAD
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
+=======
+        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
+>>>>>>> 96f55b51b676be3fe770b04e465878f6136a671c
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

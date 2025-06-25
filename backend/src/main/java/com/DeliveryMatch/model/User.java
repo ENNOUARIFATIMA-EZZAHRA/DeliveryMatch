@@ -5,7 +5,11 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+<<<<<<< HEAD
 import java.time.LocalDateTime;
+=======
+import java.util.Date;
+>>>>>>> 96f55b51b676be3fe770b04e465878f6136a671c
 
 import lombok.Data;
 
@@ -42,7 +46,11 @@ public abstract class User {
     private String motDePass;
     
     @Column(nullable = false)
+<<<<<<< HEAD
     private LocalDateTime dateInscription;
+=======
+    private Date dateInscription;
+>>>>>>> 96f55b51b676be3fe770b04e465878f6136a671c
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

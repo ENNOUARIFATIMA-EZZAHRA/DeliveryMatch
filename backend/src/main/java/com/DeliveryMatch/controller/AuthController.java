@@ -27,7 +27,11 @@ public class AuthController {
             // Create LoginRequest for automatic authentication after registration
             LoginRequest loginRequest = new LoginRequest();
             loginRequest.setEmail(created.getEmail());
+<<<<<<< HEAD
             loginRequest.setMotDePass(userDTO.getMotDePass());
+=======
+            loginRequest.setMotDePass(userDTO.getMotDePass()); // Use non-encoded password
+>>>>>>> 96f55b51b676be3fe770b04e465878f6136a671c
             
             String token = authService.authenticate(loginRequest);
             
