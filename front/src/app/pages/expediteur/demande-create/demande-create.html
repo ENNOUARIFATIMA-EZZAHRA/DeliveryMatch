@@ -1,0 +1,32 @@
+<div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+
+<div *ngIf="annonce; else loading">
+  <h2>Créer une demande pour l'annonce #{{ annonce.id }}</h2>
+  <p><strong>Départ :</strong> {{ annonce.lieuDepart }}</p>
+  <p><strong>Destination :</strong> {{ annonce.destination }}</p>
+  <p><strong>Date de départ :</strong> {{ formatDate(annonce.dateDepart) }}</p>
+  <p><strong>Capacité disponible :</strong> {{ annonce.capacite }} kg</p>
+  <form (ngSubmit)="onSubmit()" #demandeForm="ngForm">
+    <div>
+      <label>Poids à transporter (kg):</label>
+      <input type="number" [(ngModel)]="demande.poids" name="poids" min="1" max="{{ annonce.capacite }}" required (input)="calculatePrice()" />
+    </div>
+    <div>
+      <label>Description :</label>
+      <textarea [(ngModel)]="demande.description" name="description" required></textarea>
+    </div>
+    <div>
+      <label>Adresse de départ :</label>
+      <input type="text" [(ngModel)]="demande.adresseDepart" name="adresseDepart" required />
+    </div>
+    <div>
+      <label>Adresse d'arrivée :</label>
+      <input type="text" [(ngModel)]="demande.adresseArrivee" name="adresseArrivee" required />
+    </div>
+    <button type="submit" [disabled]="isSubmitting || !isValidDemande()">Créer la demande</button>
+    <button type="button" (click)="onCancel()">Annuler</button>
+  </form>
+</div>
+<ng-template #loading>
+  <p>Chargement des informations de l'annonce...</p>
+</ng-template>

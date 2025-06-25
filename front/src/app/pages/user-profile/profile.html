@@ -1,0 +1,207 @@
+<div class="min-h-screen bg-gray-50 py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Header -->
+      <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">
+          {{ getRoleLabel() === 'Administrateur '? 'Admin Profile' : 'Mon Profil' }}
+        </h1>
+        <p class="text-gray-600 mt-2">
+          {{ getRoleLabel() === 'Administrateur' ? 'Manage your personal information and settings' : 'Gérez vos informations personnelles et paramètres' }}
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Personal Information -->
+        <div class="lg:col-span-2">
+          <div class="bg-white rounded-lg shadow">
+            <div class="px-6 py-4 border-b border-gray-200">
+              <h3 class="text-lg font-medium text-gray-900">Personal Information</h3>
+            </div>
+            
+            <div class="p-6">
+              <form (ngSubmit)="updateProfile()" #profileForm="ngForm">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                    <input type="text" [(ngModel)]="profile.prenom" name="prenom" required
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                  </div>
+                  
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                    <input type="text" [(ngModel)]="profile.nom" name="nom" required
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                  </div>
+                  
+                  <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                    <input type="email" [(ngModel)]="profile.email" name="email" required
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                  </div>
+                </div>
+                
+                <div class="mt-6 flex justify-end">
+                  <button type="submit" [disabled]="!profileForm.valid || isUpdating"
+                          class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50 transition-colors">
+                    {{ isUpdating ? 'Updating...' : 'Update' }}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Change Password -->
+          <div class="bg-white rounded-lg shadow mt-8">
+            <div class="px-6 py-4 border-b border-gray-200">
+              <h3 class="text-lg font-medium text-gray-900">Change Password</h3>
+            </div>
+            
+            <div class="p-6">
+              <form (ngSubmit)="changePassword()" #passwordForm="ngForm">
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
+                    <input type="password" [(ngModel)]="passwordData.currentPassword" name="currentPassword" required
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                  </div>
+                  
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">New Password</label>
+                    <input type="password" [(ngModel)]="passwordData.newPassword" name="newPassword" required
+                           minlength="8"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <p class="text-xs text-gray-500 mt-1">Minimum 8 characters</p>
+                  </div>
+                  
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
+                    <input type="password" [(ngModel)]="passwordData.confirmPassword" name="confirmPassword" required
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                  </div>
+                </div>
+                
+                <div class="mt-6 flex justify-end">
+                  <button type="submit" [disabled]="!passwordForm.valid || isChangingPassword || passwordData.newPassword !== passwordData.confirmPassword"
+                          class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 disabled:opacity-50 transition-colors">
+                    {{ isChangingPassword ? 'Changing...' : 'Change Password' }}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Security Settings -->
+          <div class="bg-white rounded-lg shadow mt-8">
+            <div class="px-6 py-4 border-b border-gray-200">
+              <h3 class="text-lg font-medium text-gray-900">Security Settings</h3>
+            </div>
+            
+            <div class="p-6">
+              <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <h4 class="text-sm font-medium text-gray-900">Two-Factor Authentication</h4>
+                    <p class="text-sm text-gray-500">Add an extra layer of security</p>
+                  </div>
+                  <button (click)="toggleTwoFactor()" 
+                          [class]="twoFactorEnabled ? 'bg-green-600' : 'bg-gray-200'"
+                          class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors">
+                    <span [class]="twoFactorEnabled ? 'translate-x-6 bg-white' : 'translate-x-1 bg-white'"
+                          class="inline-block h-4 w-4 transform rounded-full transition-transform"></span>
+                  </button>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                  <div>
+                    <h4 class="text-sm font-medium text-gray-900">Email Notifications</h4>
+                    <p class="text-sm text-gray-500">Receive email alerts</p>
+                  </div>
+                  <button (click)="toggleEmailNotifications()" 
+                          [class]="emailNotifications ? 'bg-green-600' : 'bg-gray-200'"
+                          class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors">
+                    <span [class]="emailNotifications ? 'translate-x-6 bg-white' : 'translate-x-1 bg-white'"
+                          class="inline-block h-4 w-4 transform rounded-full transition-transform"></span>
+                  </button>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                  <div>
+                    <h4 class="text-sm font-medium text-gray-900">Active Sessions</h4>
+                    <p class="text-sm text-gray-500">Manage your active connections</p>
+                  </div>
+                  <button (click)="viewActiveSessions()" 
+                          class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                    View Sessions
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="lg:col-span-1">
+          <!-- Profile Photo -->
+          <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <div class="text-center">
+              <div class="mx-auto h-24 w-24 rounded-full bg-indigo-100 flex items-center justify-center mb-4">
+                <span class="text-2xl font-bold text-indigo-600">
+                  {{ profile.prenom.charAt(0) || 'A' }}{{ profile.nom.charAt(0) || 'D' }}
+                </span>
+              </div>
+              <h3 class="text-lg font-medium text-gray-900">
+                {{ profile.prenom }} {{ profile.nom }}
+              </h3>
+              <p class="text-sm text-gray-500">{{ getRoleLabel() }}</p>
+              <button (click)="uploadPhoto()" 
+                      class="mt-4 text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                Change Photo
+              </button>
+            </div>
+          </div>
+
+          <!-- Personal Statistics (admin only) -->
+          <div *ngIf="getRoleLabel() === 'Administrateur'" class="bg-white rounded-lg shadow p-6 mb-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Your Statistics</h3>
+            <div class="space-y-4">
+              <div class="flex justify-between">
+                <span class="text-sm text-gray-600">Moderated Ads</span>
+                <span class="text-sm font-medium text-gray-900">{{ personalStats.annoncesModerees }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-sm text-gray-600">Processed Requests</span>
+                <span class="text-sm font-medium text-gray-900">{{ personalStats.demandesTraitees }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-sm text-gray-600">Managed Users</span>
+                <span class="text-sm font-medium text-gray-900">{{ personalStats.utilisateursGeres }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-sm text-gray-600">Generated Reports</span>
+                <span class="text-sm font-medium text-gray-900">{{ personalStats.rapportsGeneres }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Quick Actions</h3>
+            <div class="space-y-3">
+              <button (click)="exportData()" 
+                      class="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md transition-colors">
+                Export My Data
+              </button>
+              <button (click)="downloadActivityLog()" 
+                      class="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md transition-colors">
+                Download Activity Log
+              </button>
+              <button (click)="deactivateAccount()" 
+                      class="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md transition-colors">
+                Deactivate Account
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

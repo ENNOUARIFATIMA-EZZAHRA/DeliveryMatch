@@ -1,107 +1,177 @@
-# 📦 DeliveryMatch – Plateforme de Co-Transport Collaboratif
+# 🚚 DeliveryMatch
 
-DeliveryMatch est une application web innovante qui met en relation des **conducteurs** effectuant des trajets avec des **expéditeurs** souhaitant faire livrer des colis. L’objectif est d’**optimiser les trajets**, **réduire les coûts de transport** et **minimiser l’impact environnemental** grâce à une solution collaborative.
+تطبيق ويب يربط بين السائقين والمرسلين في إطار مفهوم النقل التعاوني، بهدف تحسين استغلال المسافات وتخفيض تكاليف النقل.
+
+## ✨ الميزات الرئيسية
+
+### 👤 المستخدمون
+- **السائقون**: نشر إعلانات الرحلات وإدارة الطلبات
+- **المرسلون**: البحث عن رحلات وإرسال طلبات النقل
+- **المدراء**: إدارة المنصة والإحصائيات
+
+### 🔧 التقنيات المستخدمة
+
+#### Backend
+- **Spring Boot 3** - إطار العمل الرئيسي
+- **Spring Security** - الأمان والمصادقة
+- **Spring Data JPA** - التفاعل مع قاعدة البيانات
+- **PostgreSQL** - قاعدة البيانات
+- **JWT** - المصادقة
+- **Docker** - الحاويات
+
+#### Frontend
+- **Angular 16** - إطار العمل
+- **TailwindCSS** - التصميم
+- **Chart.js** - الرسوم البيانية
+- **TypeScript** - لغة البرمجة
+
+## 🚀 التثبيت والتشغيل
+
+### المتطلبات
+- Docker & Docker Compose
+- Node.js 18+ (للتطوير)
+- Java 17+ (للتطوير)
+
+### التشغيل السريع مع Docker
+
+```bash
+# استنساخ المشروع
+git clone https://github.com/your-username/DeliveryMatch.git
+cd DeliveryMatch
+
+# تشغيل جميع الخدمات
+docker-compose up -d
+
+# الوصول للتطبيق
+# Frontend: http://localhost
+# Backend API: http://localhost:8080
+# Database: localhost:5432
+```
+
+### التطوير المحلي
+
+#### Backend
+```bash
+cd backend
+./mvnw spring-boot:run
+```
+
+#### Frontend
+```bash
+cd front
+npm install
+npm start
+```
+
+## 📁 هيكل المشروع
+
+```
+DeliveryMatch/
+├── backend/                 # Spring Boot Backend
+│   ├── src/main/java/
+│   │   ├── controller/      # Controllers
+│   │   ├── model/          # Entities
+│   │   ├── repository/     # Data Access
+│   │   ├── service/        # Business Logic
+│   │   └── security/       # Security Config
+│   ├── Dockerfile
+│   └── pom.xml
+├── front/                   # Angular Frontend
+│   ├── src/app/
+│   │   ├── pages/          # Components
+│   │   ├── service/        # Services
+│   │   └── shared/         # Shared Components
+│   ├── Dockerfile
+│   └── package.json
+├── docker-compose.yml
+└── README.md
+```
+
+## 🔐 الأمان
+
+- **JWT Authentication** - مصادقة آمنة
+- **Role-based Access Control** - التحكم في الصلاحيات
+- **Input Validation** - التحقق من المدخلات
+- **CORS Configuration** - إعدادات الأمان
+- **SQL Injection Protection** - حماية من حقن SQL
+
+## 🧪 الاختبارات
+
+### Backend Tests
+```bash
+cd backend
+./mvnw test
+```
+
+### Frontend Tests
+```bash
+cd front
+npm test
+```
+
+## 📊 الإحصائيات والمراقبة
+
+- **Health Checks** - فحص صحة الخدمات
+- **Logging** - تسجيل الأحداث
+- **Error Handling** - معالجة الأخطاء
+- **Performance Monitoring** - مراقبة الأداء
+
+## 🚀 النشر
+
+### Production Deployment
+```bash
+# بناء وتشغيل في الإنتاج
+docker-compose -f docker-compose.prod.yml up -d
+```
+
+### Environment Variables
+```bash
+# Backend
+SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/deliverymatch
+JWT_SECRET=your-secret-key
+SPRING_PROFILES_ACTIVE=production
+
+# Frontend
+API_URL=http://localhost:8080/api
+```
+
+## 🔧 التحسينات المضافة
+
+### ✅ تم إنجازه
+- [x] معالجة الأخطاء الشاملة (Backend & Frontend)
+- [x] اختبارات JUnit للـ Backend
+- [x] اختبارات Angular للـ Frontend
+- [x] Docker configuration محسن
+- [x] Loading states
+- [x] صفحة Profile
+- [x] معالجة الأخطاء في Services
+- [x] تحسينات الأداء
+
+### 🚧 قيد التطوير
+- [ ] Chart.js للإحصائيات
+- [ ] نظام التقييمات
+- [ ] التنبيهات في الوقت الفعلي
+- [ ] البحث المتقدم
+- [ ] تطبيق الهاتف المحمول
+
+## 🤝 المساهمة
+
+1. Fork المشروع
+2. إنشاء branch جديد (`git checkout -b feature/AmazingFeature`)
+3. Commit التغييرات (`git commit -m 'Add some AmazingFeature'`)
+4. Push إلى Branch (`git push origin feature/AmazingFeature`)
+5. فتح Pull Request
+
+## 📝 الترخيص
+
+هذا المشروع مرخص تحت رخصة MIT - انظر ملف [LICENSE](LICENSE) للتفاصيل.
+
+## 📞 الدعم
+
+- 📧 البريد الإلكتروني: support@deliverymatch.com
+- 🐛 الإبلاغ عن الأخطاء: [Issues](https://github.com/your-username/DeliveryMatch/issues)
+- 📖 التوثيق: [Wiki](https://github.com/your-username/DeliveryMatch/wiki)
 
 ---
 
-## 🚀 Fonctionnalités Principales
-
-### 👤 Utilisateur
-
-- Créer un compte (nom, prénom, email, mot de passe).
-- Se connecter en toute sécurité.
-- Modifier ses informations personnelles.
-- Se déconnecter de la plateforme.
-
----
-
-### 🚚 Conducteur
-
-- Publier une annonce de trajet avec :
-  - Lieu de départ, étapes, destination finale.
-  - Dimensions maximales acceptées, type de marchandise, capacité.
-- Voir les demandes de transport reçues.
-- Accepter ou refuser une demande selon ses critères.
-- Consulter l’historique de ses trajets et colis transportés.
-
----
-
-### 📦 Expéditeur
-
-- Rechercher des annonces de trajets (filtrage par destination, date, type de colis).
-- Envoyer une demande de transport avec les détails du colis (dimensions, poids, type).
-- Consulter l’historique de ses demandes et envois.
-
----
-
-### 🛠️ Administrateur
-
-- Accéder à un dashboard de gestion complet :
-  - Gérer les utilisateurs (valider, suspendre, badge “Vérifié”).
-  - Gérer les annonces (consulter, modifier, supprimer).
-  - Visualiser des statistiques via **Chart.js** :
-    - Nombre d’annonces, taux d’acceptation, utilisateurs actifs, etc.
-
----
-
-## 🧰 Technologies Utilisées
-
-| Couche       | Technologie                         |
-|--------------|-------------------------------------|
-| Backend      | Spring Boot, Spring Data JPA, Spring Security |
-| Frontend     | Angular 16+, Bootstrap / Tailwind, Angular Material, Chart.js |
-| Base de données | PostgreSQL / MySQL               |
-| Tests        | JUnit                               |
-| Conteneurisation | Docker                          |
-| Documentation API | Swagger / Postman              |
-
----
-
-## 📂 Architecture
-
-Le projet est structuré selon une architecture MVC claire avec séparation des responsabilités (Controllers, Services, Entities, Repositories).
-
----
-
-**Diagramme de Class**
-
-<img width="550" alt="image" src="https://github.com/user-attachments/assets/cd4d554c-7a77-45c9-89df-94d299f7ce68" />
-
-
-
-**Diagramme de sequence de login**
-
-<img width="741" alt="image" src="https://github.com/user-attachments/assets/3e64e5e9-1a25-4e6a-83bc-166fecb3253f" />
-
-
-**Diagramme de sequence de register**
-
-
-![image](https://github.com/user-attachments/assets/16ac94d8-ef43-42b2-95a3-26501001ea04)
-
-
-**Diagramme de Use case**
-
-
-<img width="368" alt="image" src="https://github.com/user-attachments/assets/1f247bf1-cf36-4047-ac0f-ebd9a31cf2f5" />
-
-
-**Diagramme de sequence de condicteur**
-
-
-<img width="335" alt="image" src="https://github.com/user-attachments/assets/8d3b9f0e-2d63-482a-a94f-624f10894267" />
-
-
-
-**Diagramme de sequence de Administrateur**
-
-
-<img width="518" alt="image" src="https://github.com/user-attachments/assets/804fccf5-c359-461c-876b-bddcd2521344" />
-
-
-**Diagramme de sequence de expiditeur**
-
-
-<img width="553" alt="image" src="https://github.com/user-attachments/assets/94d9273e-a796-4be9-9a61-4063cb6e168b" />
-
-
+**Made with ❤️ for better transportation** 

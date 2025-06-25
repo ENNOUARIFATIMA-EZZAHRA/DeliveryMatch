@@ -1,0 +1,264 @@
+<div class="min-h-screen bg-gray-50 py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">Gestion des demandes</h1>
+      <p class="text-gray-600 mt-2">Modération et administration des demandes de transport</p>
+    </div>
+    <!-- Statistiques rapides -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center">
+          <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+            </svg>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-600">Total demandes</p>
+            <p class="text-2xl font-semibold text-gray-900">{{ stats.total }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center">
+          <div class="p-3 rounded-full bg-green-100 text-green-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-600">Acceptées</p>
+            <p class="text-2xl font-semibold text-gray-900">{{ stats.acceptees }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center">
+          <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-600">En attente</p>
+            <p class="text-2xl font-semibold text-gray-900">{{ stats.enAttente }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center">
+          <div class="p-3 rounded-full bg-red-100 text-red-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-600">Refusées</p>
+            <p class="text-2xl font-semibold text-gray-900">{{ stats.refusees }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Filtres -->
+    <div class="bg-white rounded-lg shadow p-6 mb-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Statut</label>
+          <select [(ngModel)]="filters.status" (change)="applyFilters()" 
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="">Tous</option>
+            <option value="PENDING">En attente</option>
+            <option value="ACCEPTED">Acceptées</option>
+            <option value="REJECTED">Refusées</option>
+            <option value="COMPLETED">Terminées</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Expéditeur</label>
+          <input type="text" [(ngModel)]="filters.expediteur" (input)="applyFilters()" 
+                 placeholder="Rechercher par nom"
+                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Conducteur</label>
+          <input type="text" [(ngModel)]="filters.conducteur" (input)="applyFilters()" 
+                 placeholder="Rechercher par nom"
+                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+          <input type="date" [(ngModel)]="filters.date" (change)="applyFilters()" 
+                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+      </div>
+      <div class="mt-4 flex justify-between items-center">
+        <button (click)="clearFilters()" 
+                class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+          Effacer les filtres
+        </button>
+        <div class="text-sm text-gray-600">
+          {{ filteredDemandes.length }} demande(s) trouvée(s)
+        </div>
+      </div>
+    </div>
+    <!-- Liste des demandes -->
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-medium text-gray-900">Liste des demandes</h3>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Expéditeur
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Conducteur
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Trajet
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Date
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Statut
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr *ngFor="let demande of filteredDemandes" class="hover:bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10">
+                    <div class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
+                      <span class="text-sm font-medium text-green-600">
+                        {{ demande.expediteur?.nom?.charAt(0) || 'E' }}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="ml-4">
+                    <div class="text-sm font-medium text-gray-900">
+                      {{ demande.expediteur?.nom }} {{ demande.expediteur?.prenom }}
+                    </div>
+                    <div class="text-sm text-gray-500">{{ demande.expediteur?.email }}</div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10">
+                    <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                      <span class="text-sm font-medium text-blue-600">
+                        {{ demande.annonce?.conducteur?.nom?.charAt(0) || 'C' }}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="ml-4">
+                    <div class="text-sm font-medium text-gray-900">
+                      {{ demande.annonce?.conducteur?.nom }} {{ demande.annonce?.conducteur?.prenom }}
+                    </div>
+                    <div class="text-sm text-gray-500">{{ demande.annonce?.conducteur?.email }}</div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900">
+                  <div class="font-medium">{{ demande.annonce?.villeDepart }} → {{ demande.annonce?.villeArrivee }}</div>
+                  <div class="text-gray-500">{{ demande.message }}</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900">
+                  {{ demande.annonce?.dateDepart | date:'dd/MM/yyyy' }}
+                </div>
+                <div class="text-sm text-gray-500">
+                  {{ demande.annonce?.heureDepart }}
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span [class]="getStatusClass(demande.statut)" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
+                  {{ getStatusLabel(demande.statut) }}
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <div class="flex space-x-2">
+                  <button (click)="viewDemande(demande)" 
+                          class="text-indigo-600 hover:text-indigo-900">
+                    Voir
+                  </button>
+                  <button *ngIf="demande.statut === 'PENDING'" (click)="approveDemande(demande.id)" 
+                          class="text-green-600 hover:text-green-900">
+                    Approuver
+                  </button>
+                  <button *ngIf="demande.statut === 'PENDING'" (click)="rejectDemande(demande.id)" 
+                          class="text-red-600 hover:text-red-900">
+                    Rejeter
+                  </button>
+                  <button (click)="deleteDemande(demande.id)" 
+                          class="text-red-600 hover:text-red-900">
+                    Supprimer
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Pagination -->
+      <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+        <div class="flex-1 flex justify-between sm:hidden">
+          <button (click)="previousPage()" 
+                  [disabled]="currentPage === 1"
+                  class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50">
+            Précédent
+          </button>
+          <button (click)="nextPage()" 
+                  [disabled]="currentPage >= totalPages"
+                  class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50">
+            Suivant
+          </button>
+        </div>
+        <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+          <div>
+            <p class="text-sm text-gray-700">
+              Affichage de <span class="font-medium">{{ startIndex + 1 }}</span> à 
+              <span class="font-medium">{{ endIndex }}</span> sur 
+              <span class="font-medium">{{ totalItems }}</span> résultats
+            </p>
+          </div>
+          <div>
+            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+              <button (click)="previousPage()" 
+                      [disabled]="currentPage === 1"
+                      class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50">
+                <span class="sr-only">Précédent</span>
+                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+              </button>
+              <button *ngFor="let page of visiblePages" (click)="goToPage(page)"
+                      [class]="page === currentPage ? 'bg-indigo-50 border-indigo-500 text-indigo-600' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'"
+                      class="relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                {{ page }}
+              </button>
+              <button (click)="nextPage()" 
+                      [disabled]="currentPage >= totalPages"
+                      class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50">
+                <span class="sr-only">Suivant</span>
+                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                </svg>
+              </button>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

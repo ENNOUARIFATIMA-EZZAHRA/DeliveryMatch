@@ -1,0 +1,30 @@
+<div class="max-w-2xl mx-auto mt-10 bg-white p-8 rounded shadow">
+  <h2 class="text-2xl font-bold mb-6 text-center">Détails de la demande</h2>
+  <div class="mb-4">
+    <span class="font-semibold">Expéditeur :</span>
+    <span>{{ demande.expediteur.nom }} {{ demande.expediteur.prenom }} ({{ demande.expediteur.email }})</span>
+  </div>
+  <div class="mb-4">
+    <span class="font-semibold">Conducteur :</span>
+    <span>{{ demande.conducteur.nom }} {{ demande.conducteur.prenom }} ({{ demande.conducteur.email }})</span>
+  </div>
+  <div class="mb-4">
+    <span class="font-semibold">Trajet :</span>
+    <span>{{ demande.villeDepart }} → {{ demande.villeArrivee }}</span>
+  </div>
+  <div class="mb-4">
+    <span class="font-semibold">Date :</span>
+    <span>{{ demande.date }}</span>
+  </div>
+  <div class="mb-4">
+    <span class="font-semibold">Statut :</span>
+    <span>{{ demande.statut }}</span>
+  </div>
+  <div class="mb-4">
+    <span class="font-semibold">Message :</span>
+    <span>{{ demande.message }}</span>
+  </div>
+  <div class="mt-8 flex justify-end">
+    <button class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400" routerLink="../demande-list">Retour</button>
+  </div>
+</div>

@@ -1,0 +1,163 @@
+<div class="min-h-screen bg-gray-50 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Header -->
+      <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">Trajets disponibles</h1>
+        <p class="text-gray-600 mt-2">Trouvez un conducteur pour transporter vos colis</p>
+      </div>
+
+      <!-- Filtres de recherche -->
+      <div class="bg-white rounded-lg shadow p-6 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Ville de départ</label>
+            <input type="text" [(ngModel)]="searchCriteria.lieuDepart" (input)="searchAnnonces()"
+                   placeholder="Ville de départ" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Ville d'arrivée</label>
+            <input type="text" [(ngModel)]="searchCriteria.destination" (input)="searchAnnonces()"
+                   placeholder="Ville d'arrivée" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Date de départ</label>
+            <input type="date" [(ngModel)]="searchCriteria.dateDepart" (change)="searchAnnonces()" 
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Capacité min (kg)</label>
+            <input type="number" [(ngModel)]="searchCriteria.capaciteMin" (input)="searchAnnonces()"
+                   placeholder="Capacité min (kg)" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Prix max (MAD)</label>
+            <input type="number" [(ngModel)]="searchCriteria.prixMax" (input)="searchAnnonces()" 
+                   placeholder="Ex: 200"
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+        </div>
+        
+        <div class="mt-4 flex justify-between items-center">
+          <div class="flex space-x-4">
+            <select [(ngModel)]="searchCriteria.typeVehicule" (change)="searchAnnonces()" 
+                    class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="">Tous les véhicules</option>
+              <option value="VOITURE">Voiture</option>
+              <option value="CAMION">Camion</option>
+              <option value="MOTO">Moto</option>
+              <option value="VAN">Van</option>
+            </select>
+            
+            <select [(ngModel)]="sortBy" (change)="searchAnnonces()" 
+                    class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="dateDepart">Trier par date</option>
+              <option value="prix">Trier par prix</option>
+              <option value="capacite">Trier par capacité</option>
+            </select>
+          </div>
+          
+          <button (click)="clearFilters()" 
+                  class="px-4 py-2 text-gray-600 hover:text-gray-800 text-sm font-medium">
+            Effacer les filtres
+          </button>
+        </div>
+      </div>
+
+      <!-- Liste des annonces -->
+      <div class="space-y-6">
+        <!-- Loading -->
+        <div *ngIf="loading" class="text-center py-12">
+          <div class="inline-flex items-center px-4 py-2 font-semibold leading-6 text-indigo-600">
+            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-indigo-600" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Recherche en cours...
+          </div>
+        </div>
+
+        <!-- Aucune annonce -->
+        <div *ngIf="!loading && annonces.length === 0" class="text-center py-12">
+          <div class="text-gray-500">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 4m0 13V4m-6 3l6-3"></path>
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">Aucun trajet trouvé</h3>
+            <p class="mt-1 text-sm text-gray-500">Essayez de modifier vos critères de recherche.</p>
+          </div>
+        </div>
+
+        <!-- Liste des annonces -->
+        <div *ngFor="let annonce of annonces" class="bg-white rounded-xl shadow-lg p-6 mb-6 border border-gray-100 hover:shadow-2xl transition-shadow">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+            <div>
+              <h3 class="text-2xl font-bold text-indigo-700 mb-2">
+                {{ annonce.lieuDepart }} <span class="text-gray-400">→</span> {{ annonce.destination }}
+              </h3>
+              <div class="flex flex-wrap gap-4 text-gray-700 mb-2">
+                <span class="inline-flex items-center">
+                  <svg class="w-5 h-5 mr-1 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                  </svg>
+                  {{ annonce.dateDepart }}
+                </span>
+                <span class="inline-flex items-center">
+                  <svg class="w-5 h-5 mr-1 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                  </svg>
+                  {{ annonce.capacite }} kg
+                </span>
+                
+                <span class="inline-flex items-center">
+                  <svg class="w-5 h-5 mr-1 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                  </svg>
+                  {{ annonce.typeVehicule }}
+                </span>
+                <span class="inline-flex items-center">
+                  <svg class="w-5 h-5 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6l4 2"/>
+                  </svg>
+                  <span [ngClass]="{
+                    'text-green-600': annonce.status === 'ACTIVE',
+                    'text-red-600': annonce.status !== 'ACTIVE'
+                  }">
+                    {{ annonce.status }}
+                  </span>
+                </span>
+              </div>
+              <div *ngIf="annonce.description" class="text-sm text-gray-500 mb-2">
+                <strong>Description:</strong> {{ annonce.description }}
+              </div>
+            </div>
+            <div class="mt-4 md:mt-0">
+              <a [routerLink]="['/expediteur/demande/create', annonce.id]"
+                 class="bg-indigo-600 text-white px-6 py-2 rounded-lg shadow hover:bg-indigo-700 transition-colors font-semibold">
+                Demander transport
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div *ngIf="annonces.length > 0" class="mt-8 flex justify-center">
+        <nav class="flex items-center space-x-2">
+          <button (click)="previousPage()" 
+                  [disabled]="currentPage === 1"
+                  class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+            Précédent
+          </button>
+          <span class="px-3 py-2 text-sm font-medium text-gray-700">
+            Page {{ currentPage }} sur {{ totalPages }}
+          </span>
+          <button (click)="nextPage()" 
+                  [disabled]="currentPage === totalPages"
+                  class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+            Suivant
+          </button>
+        </nav>
+      </div>
+    </div>
+  </div>

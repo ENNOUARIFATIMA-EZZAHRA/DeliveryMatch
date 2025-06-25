@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Service
 public class UserService {
@@ -29,7 +29,7 @@ public class UserService {
         user.setPrenom(userDTO.getPrenom());
         user.setEmail(userDTO.getEmail());
         user.setMotDePass(passwordEncoder.encode(userDTO.getMotDePass()));
-        user.setDateInscription(new Date());
+        user.setDateInscription(LocalDateTime.now());
         
         User savedUser = userRepository.save(user);
         return convertToDTO((Expediteur) savedUser);
@@ -91,7 +91,7 @@ public class UserService {
         dto.setNom(user.getNom());
         dto.setPrenom(user.getPrenom());
         dto.setEmail(user.getEmail());
-        dto.setDateInscription(user.getDateInscription());
+        // dto.setDateInscription(LocalDateTime.now()); // On ne set pas la date d'inscription sur le DTO directement
         return dto;
     }
 }

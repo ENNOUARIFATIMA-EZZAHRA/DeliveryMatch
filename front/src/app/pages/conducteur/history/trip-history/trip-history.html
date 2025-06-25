@@ -1,0 +1,30 @@
+<p>trip-history works!</p>
+<section class="py-10 px-4 max-w-5xl mx-auto">
+    <h2 class="text-2xl font-bold mb-6 text-gray-800">Historique de mes trajets</h2>
+  
+    <div *ngIf="trips.length === 0" class="text-gray-500">Aucun trajet trouvé.</div>
+  
+    <div *ngFor="let trip of trips" class="bg-white shadow rounded-lg p-6 mb-4">
+      <div class="flex justify-between items-center">
+        <div>
+          <h3 class="text-xl font-semibold text-indigo-700">{{ trip.villeDepart }} → {{ trip.villeArrivee }}</h3>
+          <p class="text-gray-500">{{ trip.dateDepart | date:'medium' }}</p>
+          <p class="text-sm text-gray-600 mt-1">Colis transportés: {{ trip.nbDemandes }}</p>
+          <p class="text-sm text-gray-600">État: 
+            <span [ngClass]="{
+              'text-green-600': trip.etat === 'COMPLETED',
+              'text-yellow-600': trip.etat === 'PENDING',
+              'text-red-600': trip.etat === 'CANCELED'
+            }">
+              {{ trip.etat }}
+            </span>
+          </p>
+        </div>
+        <div class="text-right">
+          <p *ngIf="trip.evaluation" class="text-sm text-yellow-500">Évaluation: ⭐{{ trip.evaluation }}/5</p>
+          <button class="text-indigo-600 underline text-sm">Voir détails</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  

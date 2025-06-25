@@ -1,9 +1,10 @@
 package com.DeliveryMatch.model;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 
 @Entity
-public class Administrateur extends User{
+@DiscriminatorValue("ADMINISTRATEUR")
+public class Administrateur extends User {
 
 }
 

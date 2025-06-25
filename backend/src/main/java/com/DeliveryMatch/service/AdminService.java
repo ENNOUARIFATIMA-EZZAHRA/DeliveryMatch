@@ -12,7 +12,7 @@ public class AdminService {
     @Autowired
     private UserRepository userRepository;
 
-    // Lister tous les utilisateurs
+
     public List<User> listerTousLesUtilisateurs() {
         return userRepository.findAll();
     }

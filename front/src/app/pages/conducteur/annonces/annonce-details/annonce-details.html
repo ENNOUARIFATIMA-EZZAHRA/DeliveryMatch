@@ -1,0 +1,97 @@
+<div class="container mx-auto p-4 lg:p-8">
+  <div *ngIf="annonce" class="bg-white shadow-lg rounded-lg overflow-hidden">
+    <div class="bg-gray-800 text-white p-4">
+      <h2 class="text-2xl font-bold">Détails de l'Annonce #{{ annonce.id }}</h2>
+    </div>
+
+    <div class="p-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Colonne Gauche -->
+        <div class="space-y-4">
+          <div>
+            <h3 class="font-semibold text-gray-700">Trajet</h3>
+            <p class="text-gray-900 text-lg">
+              <span class="font-bold">{{ annonce.lieuDepart }}</span> vers <span class="font-bold">{{ annonce.destination }}</span>
+            </p>
+          </div>
+          <div>
+            <h3 class="font-semibold text-gray-700">Date de Départ</h3>
+            <p class="text-gray-900">{{ annonce.dateDepart | date:'fullDate' }}</p>
+          </div>
+          <div>
+            <h3 class="font-semibold text-gray-700">Statut</h3>
+            <span [ngClass]="{
+              'bg-green-100 text-green-800': annonce.status === 'APPROVED',
+              'bg-yellow-100 text-yellow-800': annonce.status === 'PENDING',
+              'bg-red-100 text-red-800': annonce.status === 'REJECTED'
+            }" class="px-3 py-1 text-sm font-semibold rounded-full">
+              {{ annonce.status }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Colonne Droite -->
+        <div class="space-y-4">
+          <div>
+            <h3 class="font-semibold text-gray-700">Capacité Disponible</h3>
+            <p class="text-gray-900">{{ annonce.capacite }} kg</p>
+          </div>
+          <div>
+            <h3 class="font-semibold text-gray-700">Type de Véhicule</h3>
+            <p class="text-gray-900">{{ annonce.typeVehicule }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section Description -->
+      <div class="mt-6 border-t pt-6">
+        <h3 class="font-semibold text-gray-700">Description</h3>
+        <p class="text-gray-800 mt-2">{{ annonce.description || 'Aucune description fournie.' }}</p>
+      </div>
+
+      <!-- Section Conducteur -->
+      <div *ngIf="annonce.conducteur" class="mt-6 border-t pt-6">
+        <h3 class="font-semibold text-gray-700">Informations sur le Conducteur</h3>
+        <div class="flex items-center mt-2">
+          <img class="w-12 h-12 rounded-full mr-4" src="https://i.pravatar.cc/150?u={{annonce.conducteur.id}}" alt="Avatar du conducteur">
+          <div>
+            <p class="text-gray-900 font-bold">{{ annonce.conducteur.nom }} {{ annonce.conducteur.prenom }}</p>
+            <p class="text-gray-600 text-sm">{{ annonce.conducteur.email }}</p>
+          </div>
+  </div>
+  </div>
+
+  </div>
+
+    <div class="bg-gray-50 p-4 flex justify-between items-center">
+      <div class="flex space-x-3">
+        <!-- Boutons d'action - seulement si l'annonce appartient au conducteur connecté -->
+        <div *ngIf="canEditAnnonce()" class="flex space-x-2">
+          <button (click)="editAnnonce()" 
+                  class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition ease-in-out duration-150 flex items-center">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+            </svg>
+            Modifier
+          </button>
+          <button (click)="deleteAnnonce()" 
+                  class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition ease-in-out duration-150 flex items-center">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+            </svg>
+            Supprimer
+          </button>
+  </div>
+  </div>
+      
+      <button routerLink="/conducteur/annonces" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition ease-in-out duration-150">
+        Retour à la liste
+      </button>
+  </div>
+  </div>
+
+  <div *ngIf="!annonce" class="text-center mt-8">
+    <p class="text-gray-500">Chargement des détails de l'annonce...</p>
+    <!-- Optionnel: ajouter un spinner/loader -->
+  </div>
+</div>

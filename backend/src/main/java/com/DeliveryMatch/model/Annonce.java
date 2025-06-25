@@ -1,10 +1,9 @@
 package com.DeliveryMatch.model;
 
 import jakarta.persistence.*;
-
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Annonce {
@@ -13,25 +12,44 @@ public class Annonce {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String lieuDepart;
-    private String destination;
-    private String etapes;
-    private String dimensionsMax;
-    private String typeMarchandise;
-    private float capacite;
-    private Date dateDepart;
-    private String status;
-
     @ManyToOne
     @JoinColumn(name = "conducteur_id")
     private Conducteur conducteur;
 
-    @OneToMany(mappedBy = "annonce", cascade = CascadeType.ALL)
+    @Column(name = "lieu_depart")
+    private String lieuDepart;
+    
+    private String destination;
+    private String etapes;
+
+    @Column(name = "dimensions_max")
+    private String dimensionsMax;
+
+    @Column(name = "type_marchandise")
+    private String typeMarchandise;
+    
+    private float capacite;
+    
+    @Column(name = "type_vehicule")
+    private String typeVehicule;
+    
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "date_depart")
+    private LocalDateTime dateDepart;
+    
+    private String status;
+
+    @OneToMany(mappedBy = "annonce")
+    @JsonIgnore
     private List<Demande> demandes;
 
     // Getters & Setters
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
+    public Conducteur getConducteur() { return conducteur; }
+    public void setConducteur(Conducteur conducteur) { this.conducteur = conducteur; }
     public String getLieuDepart() { return lieuDepart; }
     public void setLieuDepart(String lieuDepart) { this.lieuDepart = lieuDepart; }
     public String getDestination() { return destination; }
@@ -44,15 +62,17 @@ public class Annonce {
     public void setTypeMarchandise(String typeMarchandise) { this.typeMarchandise = typeMarchandise; }
     public float getCapacite() { return capacite; }
     public void setCapacite(float capacite) { this.capacite = capacite; }
-    public Date getDateDepart() { return dateDepart; }
-    public void setDateDepart(Date dateDepart) { this.dateDepart = dateDepart; }
+    public String getTypeVehicule() { return typeVehicule; }
+    public void setTypeVehicule(String typeVehicule) { this.typeVehicule = typeVehicule; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    public LocalDateTime getDateDepart() { return dateDepart; }
+    public void setDateDepart(LocalDateTime dateDepart) { this.dateDepart = dateDepart; }
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
-    public Conducteur getConducteur() { return conducteur; }
-    public void setConducteur(Conducteur conducteur) { this.conducteur = conducteur; }
     public List<Demande> getDemandes() { return demandes; }
     public void setDemandes(List<Demande> demandes) { this.demandes = demandes; }
 
-    // Constructeurs
+
 }
 

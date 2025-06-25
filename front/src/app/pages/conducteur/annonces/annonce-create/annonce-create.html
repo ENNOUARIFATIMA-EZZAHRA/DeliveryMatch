@@ -1,0 +1,55 @@
+<div class="max-w-xl mx-auto mt-10 bg-white p-8 rounded shadow">
+  <h2 class="text-2xl font-bold mb-6 text-center">Créer une nouvelle annonce</h2>
+
+  <form (ngSubmit)="onSubmit()" #annonceForm="ngForm">
+    <div class="mb-4">
+      <label class="block text-gray-700">Ville de départ *</label>
+      <select [(ngModel)]="annonce.lieuDepart" name="lieuDepart" required class="w-full px-3 py-2 border rounded">
+        <option value="">Sélectionner une ville</option>
+        <option value="Agadir">Agadir</option>
+        <option value="Fes">Fes</option>
+        <option value="Casablanca">Casablanca</option>
+        <option value="Rabat">Rabat</option>
+        <option value="Beni Mellal">Beni Mellal</option>
+      </select>
+    </div>
+    <div class="mb-4">
+      <label class="block text-gray-700">Ville d'arrivée *</label>
+      <select [(ngModel)]="annonce.destination" name="destination" required class="w-full px-3 py-2 border rounded">
+        <option value="">Sélectionner une ville</option>
+        <option value="Agadir">Agadir</option>
+        <option value="Fes">Fes</option>
+        <option value="Casablanca">Casablanca</option>
+        <option value="Rabat">Rabat</option>
+        <option value="Beni Mellal">Beni Mellal</option>
+      </select>
+    </div>
+    <div class="mb-4">
+      <label class="block text-gray-700">Date de départ *</label>
+      <input type="date" [(ngModel)]="annonce.dateDepart" name="dateDepart" required class="w-full px-3 py-2 border rounded" />
+    </div>
+    <div class="mb-4">
+      <label class="block text-gray-700">Capacité (kg) *</label>
+      <input type="number" [(ngModel)]="annonce.capacite" name="capacite" required min="1" class="w-full px-3 py-2 border rounded" />
+    </div>
+    <div class="mb-4">
+      <label class="block text-gray-700">Type de véhicule</label>
+      <input type="text" [(ngModel)]="annonce.typeVehicule" name="typeVehicule" class="w-full px-3 py-2 border rounded" />
+    </div>
+    <div class="mb-4">
+      <label class="block text-gray-700">Description</label>
+      <textarea [(ngModel)]="annonce.description" name="description" rows="3" class="w-full px-3 py-2 border rounded"></textarea>
+    </div>
+
+    <div *ngIf="errorMessage" class="mb-4 text-red-600 text-center">
+      {{ errorMessage }}
+    </div>
+
+    <div class="flex justify-between">
+      <button type="button" (click)="onCancel()" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Annuler</button>
+      <button type="submit" [disabled]="isSubmitting" class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
+        {{ isSubmitting ? 'Création...' : 'Créer' }}
+      </button>
+    </div>
+  </form>
+</div>
