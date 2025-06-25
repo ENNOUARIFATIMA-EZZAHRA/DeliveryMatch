@@ -11,14 +11,14 @@ import java.util.List;
 
 @Repository
 public interface AnnonceRepository extends JpaRepository<Annonce, Integer> {
-<<<<<<< HEAD
+
     @Query("SELECT a FROM Annonce a WHERE LOWER(a.destination) LIKE LOWER(CONCAT('%', :destination, '%')) AND DATE(a.dateDepart) = :dateDepart")
     List<Annonce> searchByDestinationAndDateDepart(@Param("destination") String destination, @Param("dateDepart") java.sql.Date dateDepart);
-=======
+
     List<Annonce> findByDestinationContainingIgnoreCaseAndDateDepart(
         String destination, Date dateDepart);
     
     List<Annonce> findByConducteurId(Integer conducteurId);
->>>>>>> 96f55b51b676be3fe770b04e465878f6136a671c
+
 }
 
